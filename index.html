@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Evidence Retrieval System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <!-- Header -->
+    <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <i class="fas fa-stethoscope text-primary-600 text-2xl mr-3"></i>
+                    <h1 class="text-xl font-semibold text-gray-900 dark:text-white">
+                        Medical Evidence Retrieval System
+                    </h1>
+                </div>
+                <button id="theme-toggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                    <i class="fas fa-moon dark:hidden text-gray-600"></i>
+                    <i class="fas fa-sun hidden dark:block text-yellow-400"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Main Chat Interface -->
+            <div class="lg:col-span-2">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+                    <!-- Chat Header -->
+                    <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+                            <i class="fas fa-comments text-primary-600 mr-2"></i>
+                            Ask Medical Questions
+                        </h2>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                            Get evidence-based answers with proper citations
+                        </p>
+                    </div>
+
+                    <!-- Chat Messages -->
+                    <div id="chat-messages" class="h-96 overflow-y-auto p-4 space-y-4">
+                        <div class="text-center text-gray-500 dark:text-gray-400 py-8">
+                            <i class="fas fa-robot text-4xl mb-4"></i>
+                            <p>Welcome! Ask me any medical question and I'll provide evidence-based answers.</p>
+                            <p class="text-sm mt-2">Try: "What are the latest treatments for type 2 diabetes?"</p>
+                        </div>
+                    </div>
+
+                    <!-- Chat Input -->
+                    <div class="p-4 border-t border-gray-200 dark:border-gray-700">
+                        <div class="flex space-x-3">
+                            <input 
+                                type="text" 
+                                id="question-input" 
+                                placeholder="Ask a medical question..."
+                                class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                            >
+                            <button 
+                                id="ask-button"
+                                class="px-6 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors flex items-center"
+                            >
+                                <i class="fas fa-paper-plane mr-2"></i>
+                                Ask
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="space-y-6">
+                <!-- Add Medical Sources -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+                    <button 
+                        id="toggle-sources"
+                        class="w-full p-4 text-left flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                    >
+                        <div class="flex items-center">
+                            <i class="fas fa-plus-circle text-primary-600 mr-2"></i>
+                            <span class="font-semibold text-gray-900 dark:text-white">Add Medical Sources</span>
+                        </div>
+                        <i class="fas fa-chevron-down transform transition-transform" id="sources-chevron"></i>
+                    </button>
+                    
+                    <div id="sources-panel" class="hidden border-t border-gray-200 dark:border-gray-700">
+                        <!-- Tab Navigation -->
+                        <div class="flex border-b border-gray-200 dark:border-gray-700">
+                            <button class="tab-button active flex-1 px-4 py-3 text-sm font-medium" data-tab="upload">
+                                <i class="fas fa-upload mr-2"></i>Upload Files
+                            </button>
+                            <button class="tab-button flex-1 px-4 py-3 text-sm font-medium" data-tab="text">
+                                <i class="fas fa-edit mr-2"></i>Paste Text
+                            </button>
+                        </div>
+
+                        <!-- Upload Tab -->
+                        <div id="upload-tab" class="tab-content p-4">
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        Upload Files (PDF, CSV, TXT)
+                                    </label>
+                                    <div 
+                                        id="drop-zone"
+                                        class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center hover:border-primary-500 transition-colors cursor-pointer"
+                                    >
+                                        <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
+                                        <p class="text-gray-600 dark:text-gray-400">Drag & drop files here or click to browse</p>
+                                        <input type="file" id="file-input" multiple accept=".pdf,.csv,.txt" class="hidden">
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        Title (optional)
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="upload-title"
+                                        placeholder="Document title..."
+                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                    >
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        Citation (optional)
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="upload-citation"
+                                        placeholder="Author et al., Year"
+                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                    >
+                                </div>
+                                
+                                <button 
+                                    id="upload-button"
+                                    class="w-full px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-md transition-colors"
+                                >
+                                    <i class="fas fa-upload mr-2"></i>Upload and Index Files
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Text Tab -->
+                        <div id="text-tab" class="tab-content p-4 hidden">
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        Title <span class="text-red-500">*</span>
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="text-title"
+                                        placeholder="Document title..."
+                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                        required
+                                    >
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        Medical Content <span class="text-red-500">*</span>
+                                    </label>
+                                    <textarea 
+                                        id="text-content"
+                                        rows="6"
+                                        placeholder="Paste medical abstracts, research content, or clinical findings..."
+                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                        required
+                                    ></textarea>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        Citation (optional)
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="text-citation"
+                                        placeholder="Author et al., Year"
+                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                    >
+                                </div>
+                                
+                                <button 
+                                    id="text-button"
+                                    class="w-full px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-md transition-colors"
+                                >
+                                    <i class="fas fa-magic mr-2"></i>Summarize and Index Content
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Status -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+                    <h3 class="font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
+                        <i class="fas fa-info-circle text-primary-600 mr-2"></i>
+                        System Status
+                    </h3>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600 dark:text-gray-400">Documents Indexed:</span>
+                            <span id="doc-count" class="font-medium text-gray-900 dark:text-white">Loading...</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600 dark:text-gray-400">Search Engine:</span>
+                            <span class="font-medium text-green-600">FAISS Active</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600 dark:text-gray-400">AI Model:</span>
+                            <span class="font-medium text-green-600">Gemini Pro</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6 flex items-center space-x-3">
+            <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-600"></div>
+            <span class="text-gray-900 dark:text-white">Processing...</span>
+        </div>
+    </div>
+
+    <script>
+        // Theme management
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+        
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.classList.toggle('dark', savedTheme === 'dark');
+        
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            const isDark = html.classList.contains('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+
+        // Tab management
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const tabName = button.dataset.tab;
+                
+                // Update button states
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                // Update content visibility
+                tabContents.forEach(content => {
+                    content.classList.toggle('hidden', content.id !== `${tabName}-tab`);
+                });
+            });
+        });
+
+        // Collapsible panel
+        const toggleSources = document.getElementById('toggle-sources');
+        const sourcesPanel = document.getElementById('sources-panel');
+        const sourcesChevron = document.getElementById('sources-chevron');
+        
+        toggleSources.addEventListener('click', () => {
+            sourcesPanel.classList.toggle('hidden');
+            sourcesChevron.classList.toggle('rotate-180');
+        });
+
+        // File upload handling
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        
+        dropZone.addEventListener('click', () => fileInput.click());
+        
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('border-primary-500');
+        });
+        
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('border-primary-500');
+        });
+        
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('border-primary-500');
+            fileInput.files = e.dataTransfer.files;
+            updateDropZoneText();
+        });
+        
+        fileInput.addEventListener('change', updateDropZoneText);
+        
+        function updateDropZoneText() {
+            const files = fileInput.files;
+            if (files.length > 0) {
+                const fileNames = Array.from(files).map(f => f.name).join(', ');
+                dropZone.innerHTML = `
+                    <i class="fas fa-file-alt text-3xl text-primary-600 mb-2"></i>
+                    <p class="text-primary-600 font-medium">${files.length} file(s) selected</p>
+                    <p class="text-sm text-gray-500">${fileNames}</p>
+                `;
+            }
+        }
+
+        // Chat functionality
+        const chatMessages = document.getElementById('chat-messages');
+        const questionInput = document.getElementById('question-input');
+        const askButton = document.getElementById('ask-button');
+        const loadingOverlay = document.getElementById('loading-overlay');
+
+        function addMessage(content, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `flex ${isUser ? 'justify-end' : 'justify-start'}`;
+            
+            messageDiv.innerHTML = `
+                <div class="max-w-3xl ${isUser ? 'bg-primary-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'} rounded-lg px-4 py-3">
+                    ${content}
+                </div>
+            `;
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function formatSources(sources) {
+            if (!sources || sources.length === 0) return '';
+            
+            let sourcesHtml = '<div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600"><h4 class="font-semibold mb-2">Sources:</h4>';
+            
+            sources.forEach((source, index) => {
+                const confidence = Math.round(source.score * 100);
+                sourcesHtml += `
+                    <div class="mb-3 p-3 bg-gray-50 dark:bg-gray-600 rounded-md">
+                        <div class="flex justify-between items-start mb-1">
+                            <h5 class="font-medium text-sm">${source.document.title}</h5>
+                            <span class="text-xs bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200 px-2 py-1 rounded">${confidence}% match</span>
+                        </div>
+                        ${source.document.citation ? `<p class="text-xs text-gray-600 dark:text-gray-400 mb-2">${source.document.citation}</p>` : ''}
+                        <p class="text-sm text-gray-700 dark:text-gray-300">${source.snippet}</p>
+                    </div>
+                `;
+            });
+            
+            sourcesHtml += '</div>';
+            return sourcesHtml;
+        }
+
+        async function askQuestion() {
+            const question = questionInput.value.trim();
+            if (!question) return;
+            
+            // Clear input and add user message
+            questionInput.value = '';
+            addMessage(question, true);
+            
+            // Show loading
+            loadingOverlay.classList.remove('hidden');
+            
+            try {
+                const response = await fetch('/api/search', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ query: question })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    const answerContent = data.answer + formatSources(data.sources);
+                    addMessage(answerContent);
+                } else {
+                    addMessage(`Error: ${data.error}`, false);
+                }
+            } catch (error) {
+                addMessage('Sorry, I encountered an error. Please try again.', false);
+            } finally {
+                loadingOverlay.classList.add('hidden');
+            }
+        }
+
+        askButton.addEventListener('click', askQuestion);
+        questionInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') askQuestion();
+        });
+
+        // Upload functionality
+        document.getElementById('upload-button').addEventListener('click', async () => {
+            const files = fileInput.files;
+            if (files.length === 0) {
+                alert('Please select files to upload');
+                return;
+            }
+            
+            const formData = new FormData();
+            for (let file of files) {
+                formData.append('files', file);
+            }
+            formData.append('title', document.getElementById('upload-title').value);
+            formData.append('citation', document.getElementById('upload-citation').value);
+            
+            loadingOverlay.classList.remove('hidden');
+            
+            try {
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    alert(data.message);
+                    // Reset form
+                    fileInput.value = '';
+                    document.getElementById('upload-title').value = '';
+                    document.getElementById('upload-citation').value = '';
+                    dropZone.innerHTML = `
+                        <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
+                        <p class="text-gray-600 dark:text-gray-400">Drag & drop files here or click to browse</p>
+                    `;
+                    updateDocCount();
+                } else {
+                    alert(`Error: ${data.error}`);
+                }
+            } catch (error) {
+                alert('Upload failed. Please try again.');
+            } finally {
+                loadingOverlay.classList.add('hidden');
+            }
+        });
+
+        // Text content functionality
+        document.getElementById('text-button').addEventListener('click', async () => {
+            const title = document.getElementById('text-title').value.trim();
+            const content = document.getElementById('text-content').value.trim();
+            
+            if (!title || !content) {
+                alert('Please fill in both title and content');
+                return;
+            }
+            
+            loadingOverlay.classList.remove('hidden');
+            
+            try {
+                const response = await fetch('/api/add_text', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        title: title,
+                        text: content,
+                        citation: document.getElementById('text-citation').value
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    alert(data.message);
+                    // Reset form
+                    document.getElementById('text-title').value = '';
+                    document.getElementById('text-content').value = '';
+                    document.getElementById('text-citation').value = '';
+                    updateDocCount();
+                } else {
+                    alert(`Error: ${data.error}`);
+                }
+            } catch (error) {
+                alert('Failed to add content. Please try again.');
+            } finally {
+                loadingOverlay.classList.add('hidden');
+            }
+        });
+
+        // Update document count
+        function updateDocCount() {
+            // This would typically fetch from an API endpoint
+            // For now, we'll just show a placeholder
+            document.getElementById('doc-count').textContent = 'Updated';
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Clear the welcome message when first interaction
+            const clearWelcome = () => {
+                const welcomeMsg = chatMessages.querySelector('.text-center');
+                if (welcomeMsg) {
+                    welcomeMsg.remove();
+                }
+            };
+            
+            questionInput.addEventListener('focus', clearWelcome, { once: true });
+        });
+
+        // Add CSS for active tab styling
+        const style = document.createElement('style');
+        style.textContent = `
+            .tab-button {
+                @apply text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors;
+            }
+            .tab-button.active {
+                @apply text-primary-600 dark:text-primary-400 border-b-2 border-primary-600 dark:border-primary-400;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

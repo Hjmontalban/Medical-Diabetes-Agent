@@ -1,0 +1,32 @@
+[
+  {
+    "id": "doc1",
+    "title": "Metformin in Type 2 Diabetes Management",
+    "text": "Metformin is the first-line treatment for type 2 diabetes mellitus. It works by reducing hepatic glucose production and improving insulin sensitivity. Common side effects include gastrointestinal symptoms such as nausea, diarrhea, and abdominal discomfort. These effects are usually mild and transient. Metformin has been shown to reduce cardiovascular events and mortality in diabetic patients. The typical starting dose is 500mg twice daily with meals, which can be increased gradually to a maximum of 2000-2500mg daily based on glycemic control and tolerance.",
+    "citation": "American Diabetes Association, 2023"
+  },
+  {
+    "id": "doc2",
+    "title": "GLP-1 Receptor Agonists: Efficacy and Safety",
+    "text": "GLP-1 receptor agonists are effective glucose-lowering medications that also promote weight loss. They work by stimulating insulin secretion in a glucose-dependent manner and slowing gastric emptying. Common side effects include nausea, vomiting, and diarrhea, particularly during treatment initiation. These medications have shown cardiovascular benefits in high-risk patients. Examples include semaglutide, liraglutide, and dulaglutide. Dosing varies by specific agent but typically involves weekly or daily subcutaneous injections.",
+    "citation": "Drucker, D.J. et al., Nature Reviews Endocrinology, 2022"
+  },
+  {
+    "id": "doc3",
+    "title": "Gestational Diabetes: Risks and Management",
+    "text": "Gestational diabetes mellitus (GDM) affects 6-9% of pregnancies and increases risks for both mother and baby. Maternal risks include preeclampsia, cesarean delivery, and future type 2 diabetes. Fetal risks include macrosomia, birth trauma, neonatal hypoglycemia, and respiratory distress syndrome. Management involves dietary modifications, blood glucose monitoring, and insulin therapy when needed. Metformin may be used as an alternative to insulin in some cases. Postpartum glucose testing is recommended 6-12 weeks after delivery to screen for persistent diabetes.",
+    "citation": "ACOG Practice Bulletin, 2022"
+  },
+  {
+    "id": "doc4",
+    "title": "SGLT2 Inhibitors: Mechanism and Clinical Benefits",
+    "text": "SGLT2 inhibitors block glucose reabsorption in the kidneys, leading to glucose excretion in urine. They provide modest glucose lowering with additional benefits including weight loss, blood pressure reduction, and cardiovascular protection. Common side effects include genital mycotic infections, urinary tract infections, and increased urination. Rare but serious adverse effects include diabetic ketoacidosis and Fournier's gangrene. Examples include empagliflozin, canagliflozin, and dapagliflozin. These medications are particularly beneficial in patients with heart failure or chronic kidney disease.",
+    "citation": "Zinman, B. et al., New England Journal of Medicine, 2021"
+  },
+  {
+    "id": "doc5",
+    "title": "Insulin Therapy in Diabetes Management",
+    "text": "Insulin therapy is essential for type 1 diabetes and may be required in type 2 diabetes when other medications are insufficient. Types include rapid-acting, short-acting, intermediate-acting, and long-acting insulins. Basal-bolus regimens provide physiologic insulin replacement. Common side effects include hypoglycemia and weight gain. Injection site reactions and lipodystrophy may occur with repeated injections. Continuous glucose monitoring and insulin pumps can improve glycemic control and quality of life. Proper injection technique and rotation of injection sites are important for optimal absorption.",
+    "citation": "Hirsch, I.B. et al., Diabetes Care, 2023"
+  }
+]
