@@ -69,8 +69,8 @@ A modern, AI-powered medical evidence retrieval system that provides evidence-ba
 
 ### Step 1: Clone Repository
 ```bash
-git clone <your-repo-url>
-cd <your-repo-folder>
+git clone https://github.com/Hjmontalban/Medical-Diabetes-Agent.git
+cd Medical-Diabetes-Agent
 ```
 
 ### Step 2: Create Virtual Environment
